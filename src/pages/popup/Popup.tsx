@@ -1,4 +1,5 @@
-import React from 'react';
+/**
+ * import React from 'react';
 import logo from '@assets/img/logo.svg';
 
 export default function Popup(): JSX.Element {
@@ -21,4 +22,24 @@ export default function Popup(): JSX.Element {
       </header>
     </div>
   );
+}*/
+import { useContext, useEffect } from "react";
+import { MetaDataListContext } from "./DataContenxt";
+
+function App() {
+  const { metaDataList, setMetaDataList } = useContext(MetaDataListContext);
+  useEffect(() => {
+
+    console.log(metaDataList)
+  
+  }, [metaDataList]);
+  return(
+    <div>
+   
+      DicomViewer URL Generator
+  
+  </div>
+  )
 }
+
+export default App;

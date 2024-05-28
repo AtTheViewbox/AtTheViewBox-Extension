@@ -1,9 +1,11 @@
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
+import { resolve} from 'path';
+import path from 'path';
 import fs from 'fs';
 import { defineConfig } from 'vite';
 import { crx, ManifestV3Export } from '@crxjs/vite-plugin';
-
+import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
 import manifest from './manifest.json';
 import devManifest from './manifest.dev.json';
 import pkg from './package.json';
@@ -43,21 +45,35 @@ function stripDevIcons (apply: boolean) {
 export default defineConfig({
   resolve: {
     alias: {
+      "@cornerstonejs/tools": "@cornerstonejs/tools/dist/umd/index.js",
       '@src': root,
       '@assets': assetsDir,
       '@pages': pagesDir,
+      
     },
   },
   plugins: [
     react(),
+    wasm(),
+    topLevelAwait(),
     crx({
       manifest: extensionManifest as ManifestV3Export,
       contentScripts: {
         injectCss: true,
       }
     }),
-    stripDevIcons(isDev)
-  ],
+    stripDevIcons(isDev),
+    
+  ],  
+  worker: {
+    // Not needed with vite-plugin-top-level-await >= 1.3.0
+    // format: "es",
+    plugins: [
+      wasm(),
+      topLevelAwait()
+    ]
+  },
+  
   publicDir,
   build: {
     outDir,
