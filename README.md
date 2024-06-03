@@ -27,11 +27,3 @@ To run the workflow do the following:
 5. In the summary page **"Artifacts"** section click on the generated **"vite-web-extension"**
 6. Upload this file to the Chrome Web Store as described [here](https://developer.chrome.com/docs/webstore/publish/)
 
-# Tech Docs <a name="tech"></a>
-- [Vite](https://vitejs.dev/)
-- [Vite Plugin](https://vitejs.dev/guide/api-plugin.html)
-- [Chrome Extension with manifest 3](https://developer.chrome.com/docs/extensions/mv3/)
-- [Rollup](https://rollupjs.org/guide/en/)
-- [@crxjs/vite-plugin](https://crxjs.dev/vite-plugin)
-- [Tailwind CSS](https://tailwindcss.com/docs/configuration)
-
