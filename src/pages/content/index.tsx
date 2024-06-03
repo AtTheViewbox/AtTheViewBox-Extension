@@ -45,6 +45,7 @@ window.addEventListener(
 );
 
 function generateMetaData(list:[any],url:string) {
+  
   var objs = list.map((x) => ({
     thumbnail: x.images[0],
     label: x.label,
@@ -52,12 +53,15 @@ function generateMetaData(list:[any],url:string) {
     id: x.id,
     prefix: longestCommonPrefix(x.images),
     suffix: longestCommonSuffix(x.images),
-    start_slice: 1,
-    end_slice: x.images.length,
-    max_slice: x.images.length,
-    ww: checkUrlQuery(x.id,url,"ww")?checkUrlQuery(x.id,url,"ww"):1400,
-    wc: checkUrlQuery(x.id,url,"wc")?checkUrlQuery(x.id,url,"wc"):1200,
-    ci: 1,
+    start_slice: Number(x.images[0].split("/").pop().split(".")[0]),
+    end_slice: Number(x.images[x.images.length-1].split("/").pop().split(".")[0]),
+    max_slice: Number(x.images[x.images.length-1].split("/").pop().split(".")[0]),
+    min_slice: Number(x.images[0].split("/").pop().split(".")[0]),
+    //ww: checkUrlQuery(x.id,url,"ww")?checkUrlQuery(x.id,url,"ww"):1400,
+    ww: 1400,
+    //wc: checkUrlQuery(x.id,url,"wc")?checkUrlQuery(x.id,url,"wc"):1200,
+    wc: 1200,
+    ci: Number(x.images[0].split("/").pop().split(".")[0]),
     z: 1,
     px: "0",
     py: "0",

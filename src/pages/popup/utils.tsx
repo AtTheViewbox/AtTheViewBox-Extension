@@ -8,6 +8,7 @@ export interface MetaData {
     start_slice: number;
     end_slice: number;
     max_slice: number;
+    min_slice:number;
     ww: number;
     wc: number;
     ci: number;
@@ -26,8 +27,9 @@ export interface MetaData {
     modality: "",
     prefix: "",
     suffix: "",
-    start_slice: 1,
-    end_slice: 0,
+    start_slice: 0,
+    end_slice: 1,
+    min_slice:0,
     ww: 0,
     wc: 0,
     ci: 1,

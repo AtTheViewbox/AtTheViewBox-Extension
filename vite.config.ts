@@ -46,6 +46,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@cornerstonejs/tools": "@cornerstonejs/tools/dist/umd/index.js",
+      "@": path.resolve(__dirname, "./src"),
       '@src': root,
       '@assets': assetsDir,
       '@pages': pagesDir,
