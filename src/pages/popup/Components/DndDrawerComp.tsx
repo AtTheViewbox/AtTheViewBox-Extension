@@ -1,12 +1,13 @@
 
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import { MetaData } from "../utils";
 
 import * as React from "react";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
-import { X,Plus,Minus,ClipboardCopy } from "lucide-react";
+import { X, Plus, Minus, ClipboardCopy, Copy, CopyCheck } from "lucide-react";
+
 
 import {
     Card,
@@ -21,6 +22,12 @@ import DragComp from "./DragComp";
 import DropComp from "./DropComp";
 import Grid from 'dynamic-react-grid'
 import { Input } from "./ui/input";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "./ui/tooltip"
 
 
 import { generateGridURL } from "../utils";
@@ -40,6 +47,7 @@ const DndDrawerComp: React.VFC<DndDrawerCompProps> = ({
     setDrawerState,
 }) => {
     const [url, setURL] = useState<string>("Click Generate URL");
+    const [copyClicked, setCopyClicked] = useState<boolean>(false);
     const [rows, setRows] = useState<number>(1);
     const [cols, setCols] = useState<number>(1);
 
@@ -58,9 +66,11 @@ const DndDrawerComp: React.VFC<DndDrawerCompProps> = ({
     useEffect(() => {
 
         setURL(generateGridURL(metaDataList, rows, cols))
-    
-      }, [metaDataList]);
-    
+        setCopyClicked(false)
+
+
+    }, [metaDataList]);
+
 
     return (
         <>  <ScrollArea className="h-[600px] w-[400px]">
@@ -85,50 +95,66 @@ const DndDrawerComp: React.VFC<DndDrawerCompProps> = ({
                         })}
                     </div>
                     <div className="flex h-[350px] w-[350px] items-center justify-center rounded-md">
-                    {Array.from(Array(cols).keys()).map((c) => (
-                        <Grid row className="h-full">
-                        {Array.from(Array(rows).keys()).map((r) => (
-                         <Grid spacing={1}> 
-                        <DropComp
-                            metaDataList={metaDataList}
-                            r={r}
-                            c={c}
-                         
-                            setMetaDataList={setMetaDataList}
-                        /></Grid>   
-                        )
-                        )}
-                        </Grid>
-                    ))}
-                    </div>
-                   
-                <div className="flex w-full max-w-sm items-center space-x-3">
-                <div className="flex w-full max-w-sm items-center space-x-2">
-                <Label>Columns</Label>
-                <Plus onClick={addCol} className ="hover:bg-accent"/>
-                <Minus onClick={minusCol} className ="hover:bg-accent"/>
-                </div>
-                <div className="flex w-full max-w-sm items-center space-x-2">
-                <Label>Rows</Label>
-                 <Plus onClick={addRow} className ="hover:bg-accent"/>
-                 <Minus onClick={minusRow} className ="hover:bg-accent"/>
-                 </div>
-                </div>
+                        {Array.from(Array(cols).keys()).map((c) => (
+                            <Grid row className="h-full">
+                                {Array.from(Array(rows).keys()).map((r) => (
+                                    <Grid spacing={1}>
+                                        <DropComp
+                                            metaDataList={metaDataList}
+                                            r={r}
+                                            c={c}
 
-                <div className="flex w-full max-w-sm items-center space-x-2">
-                <Input disabled placeholder={ url } />
-            <Button size="icon" onClick={() => {
-                
-                 navigator.clipboard.writeText(url)
-                }
-                
-                
-                }>
-              <ClipboardCopy className="h-4 w-4"/>
-            </Button>
-    </div>
+                                            setMetaDataList={setMetaDataList}
+                                        /></Grid>
+                                )
+                                )}
+                            </Grid>
+                        ))}
+                    </div>
+
+                    <div className="flex w-full max-w-sm items-center space-x-3">
+                        <div className="flex w-full max-w-sm items-center space-x-2">
+                            <Label>Columns</Label>
+                            <Plus onClick={addCol} className="hover:bg-accent" />
+                            <Minus onClick={minusCol} className="hover:bg-accent" />
+                        </div>
+                        <div className="flex w-full max-w-sm items-center space-x-2">
+                            <Label>Rows</Label>
+                            <Plus onClick={addRow} className="hover:bg-accent" />
+                            <Minus onClick={minusRow} className="hover:bg-accent" />
+                        </div>
+                    </div>
+
+                    <div className="flex w-full max-w-sm items-center space-x-2">
+                        <Input disabled placeholder={url} />
+
+                        <TooltipProvider delayDuration={50}  >
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button size="icon" onClick={() => {
+                                        navigator.clipboard.writeText(url)
+                                        setCopyClicked(true)
+                                    }
+                                    }>
+                                        {copyClicked ?
+
+                                            <CopyCheck className="h-4 w-4" />
+                                            :
+                                            <Copy className="h-4 w-4" />}
+
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent align={'end'} alignOffset={0} avoidCollisions={false}>
+                                    
+                                    {copyClicked ? "Copied!": "Copy Url"}
+                                    
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+
+                    </div>
                 </CardContent>
-                
+
             </Card>
         </ScrollArea>
         </>
