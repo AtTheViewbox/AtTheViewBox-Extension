@@ -9,6 +9,8 @@ interface DropCompProps {
   c: number;
 
   setMetaDataList: React.Dispatch<React.SetStateAction<MetaData[]>>;
+  setMetaDataSelected: React.Dispatch<React.SetStateAction<number>>;
+  setDrawerState: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const colSize: Record<number, number> = {
@@ -22,6 +24,8 @@ const DropComp: React.VFC<DropCompProps> = ({
   r,
   c,
   setMetaDataList,
+  setMetaDataSelected,
+  setDrawerState
 }) => {
   const [{ isOver }, drop] = useDrop({
     accept: "card",
@@ -55,7 +59,7 @@ const DropComp: React.VFC<DropCompProps> = ({
   };
 
   return (
-    
+
     <div className="flex w-full h-full min-h-[100px] items-center justify-center rounded-md border border-dashed border-slate-400" ref={drop}>
       {metaDataList.map((data) => {
         if (data.cord[0] == c && data.cord[1] == r) {
@@ -64,6 +68,8 @@ const DropComp: React.VFC<DropCompProps> = ({
               metadata={data}
               metaDataList={metaDataList}
               setMetaDataList={setMetaDataList}
+              setMetaDataSelected={setMetaDataSelected}
+              setDrawerState={setDrawerState}
             />
           );
         }
@@ -71,5 +77,4 @@ const DropComp: React.VFC<DropCompProps> = ({
     </div>
   );
 };
-{/**<div className="flex w-full h-full items-center justify-center rounded-md border border-dashed text-sm" ref={drop}>*/}
 export default DropComp;

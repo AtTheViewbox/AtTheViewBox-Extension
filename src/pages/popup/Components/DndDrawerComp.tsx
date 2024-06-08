@@ -7,7 +7,8 @@ import * as React from "react";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 import { X, Plus, Minus, ClipboardCopy, Copy, CopyCheck } from "lucide-react";
-
+import Drawer from 'react-modern-drawer'
+import ImageDrawerComp from "./ImageDrawerComp";
 
 import {
     Card,
@@ -50,6 +51,8 @@ const DndDrawerComp: React.VFC<DndDrawerCompProps> = ({
     const [copyClicked, setCopyClicked] = useState<boolean>(false);
     const [rows, setRows] = useState<number>(1);
     const [cols, setCols] = useState<number>(1);
+    const [metaDataSelected, setMetaDataSelected] = useState(0);
+    const [drawerState, setDrawerState] = useState(false);
 
     const addCol = () => {
         if (cols < 3) setCols(cols + 1);
@@ -74,10 +77,28 @@ const DndDrawerComp: React.VFC<DndDrawerCompProps> = ({
 
     return (
         <>  <ScrollArea className="h-[600px] w-[400px]">
+
+<Drawer
+          open={drawerState}
+          onClose={() => setDrawerState(false)}
+          direction='left'
+          size="400px"
+        >
+
+          <ImageDrawerComp
+            setDrawerState={setDrawerState}
+            metadataId={metaDataSelected}
+          />
+
+        </Drawer>
             <Button variant="ghost" onClick={() => setDrawerState(false)}>
                 <X />
             </Button>
             <Card >
+            <CardHeader>
+          <CardTitle>AtTheViewBox Url Generator</CardTitle>
+          <CardDescription>Create iframe urls for presentation</CardDescription>
+        </CardHeader>
                 <CardContent className="grid gap-4">
                     <div className="grid w-full max-w-sm items-center gap-2 grid-cols-3">
                         {metaDataList.map((data) => {
