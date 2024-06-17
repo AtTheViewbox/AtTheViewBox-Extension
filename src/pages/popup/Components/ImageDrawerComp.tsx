@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { MetaDataListContext } from "../DataContenxt";
 import { MetaData, initalValues } from "../utils";
 import { useContext } from "react";
-import { X } from 'lucide-react';
+import { X,Trash,Save } from 'lucide-react';
 import { Button } from "./ui/button";
 import ViewportComp from "./ViewportComp";
 import {
@@ -14,13 +14,14 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Label } from "./ui/label"
-import { Input } from "./ui/input";
+
 import { ScrollArea } from "./ui/scroll-area";
-import { Info } from 'lucide-react';
 import TooltipSliderComp from "./TooltipSliderComp";
-import Slider from "rc-slider";
+
 import 'rc-slider/assets/index.css';
 import '/src/pages/popup/Components/slider.css'
+import InputComp from "./InputComp";
+
 
 
 
@@ -41,33 +42,37 @@ const ImageDrawerComp: React.VFC<ImageDrawerCompProps> = ({
   const [stateFlag, setStateFlag] = useState(false);
   const { metaDataList, setMetaDataList, setValue } = useContext(MetaDataListContext);
 
-  const handleRangeChange = (value:any) => {
+
+  const handleRangeChange = (value: any) => {
     if (!Array.isArray(value)) {
       return;
     }
-    console.log(value)
     setStateFlag(true)
-  
-   
-      setMetaDataList([...metaDataList].map(object => {
-        if(object.id === metadata.id) {
-          return {
-            ...object,
-            start_slice: value[0],
-            end_slice:value[1],
-            ci: (metadata.ci<value[0])?value[0]:(metadata.ci>value[1])?value[1]:metadata.ci
 
-          }
+
+    setMetaDataList([...metaDataList].map(object => {
+      if (object.id === metadata.id) {
+        return {
+          ...object,
+          start_slice: value[0],
+          end_slice: value[2],
+          //ci: (metadata.ci<value[0])?value[0]:(metadata.ci>value[2])?value[2]:metadata.ci
+          ci: value[1]
+
         }
-        else return object;
-      }))}
+      }
+      else return object;
+    }))
+  }
 
 
   useEffect(() => {
     // @ts-ignore
     setMetadata(metaDataList.find((x) => x.id === metadataId) || initalValues);
-    console.log(metadata)
+  
   }, [metaDataList, metadataId]);
+
+
 
   const handleClose = () => {
     setDrawerState(false)
@@ -78,45 +83,56 @@ const ImageDrawerComp: React.VFC<ImageDrawerCompProps> = ({
     key: string,
     event: any
   ) => {
-    if (event.key === 'Enter'){
-    setStateFlag(true);
+    if (event.key === 'Enter') {
+      setStateFlag(true);
+      
 
-    setMetaDataList(
-      [...metaDataList].map((object) => {
-        if (object.id === metadataId) {
-          if (key === "ci") {
-            
-            if (Number(event.target.value) > object.end_slice) {
+      setMetaDataList(
+        [...metaDataList].map((object) => {
+          if (object.id === metadataId) {
+            if (key === "wc") {
               return {
                 ...object,
-                [key]: object.end_slice,
-              };
+                [key]: object.modality == "CT" ? (Number(event.target.value) + 1000) : Number(event.target.value),
+                //[key]: (Number(event.target.value)),
+              }
+
             }
-            if (Number(event.target.value) < object.start_slice) {
-              return {
-                ...object,
-                [key]: 0,
-              };
+
+            if (key === "ci") {
+
+              if (Number(event.target.value) > object.end_slice) {
+                return {
+                  ...object,
+                  [key]: object.end_slice,
+                };
+              }
+              if (Number(event.target.value) < object.start_slice) {
+                return {
+                  ...object,
+                  [key]: 0,
+                };
+              }
             }
-          }
-          return {
-            ...object,
-            [key]: event.target.value,
-          };
-        } else return object;
-      })
-    );
-  }
+            return {
+              ...object,
+              [key]: event.target.value,
+            };
+          } else return object;
+        })
+      );
+    }
   };
 
   return (
     <>
       <ScrollArea className="h-[600px] w-[400px]">
         <div className="flex w-full max-w-sm items-center">
-        <Button variant="ghost" onClick={() => handleClose()}>
-          <X />
-        </Button>
-        {/**<div className="items-right">
+          <Button variant="ghost" onClick={() => handleClose()}>
+            <X />
+          </Button>
+          <Label>{metadata.label}</Label>
+          {/**<div className="items-right">
         <Info/>
   </div>*/}
         </div>
@@ -129,62 +145,72 @@ const ImageDrawerComp: React.VFC<ImageDrawerCompProps> = ({
           />
         </div>
         <Card className="w-[400px] mt-4">
-        
+
           <CardContent className="grid gap-4">
-            <div className="grid gap-y-5"> 
+          <CardDescription>Adjust values the scan will initially load with.</CardDescription>
+
+            <div className="grid gap-y-3">
               <div className="grid w-full max-w-sm items-center gap-2 ">
                 <Label htmlFor="email">Slice Range</Label>
                 <TooltipSliderComp range
-                min={metadata.min_slice} 
-                max={metadata.max_slice} 
-                value={[metadata.start_slice,metadata.end_slice]}
-                tipFormatter={(value) => `${value}`}
-                onChange={handleRangeChange}
+                  min={metadata.min_slice}
+                  max={metadata.max_slice}
+                  value={[metadata.start_slice, metadata.ci, metadata.end_slice]}
+                  tipFormatter={(value) => `${value}`}
+                  onChange={handleRangeChange}
+                  handleStyle={[
+                    {
+                      backgroundColor: 'black',
+                      borderColor: 'black',
+                      cursor: "pointer",
+                      boxShadow: "black",
 
-                styles={{
-                  tracks: {
-                    background: `black`,
-                  },
-                  track: {
-                    background: 'transparent',
-                  },
-                  handle:{
-                    background:`black`,
-                    borderColor:'black',
-                    cursor: "pointer",
-                    boxShadow:"black",
-                  
-                  },
-                  
-                
-              
-                }}
-                
+                    }, {
+                      backgroundColor: 'white',
+                      borderColor: 'black',
+                      cursor: "pointer",
+                      boxShadow: "black",
+
+                    }, {
+                      backgroundColor: 'black',
+                      borderColor: 'black',
+                      cursor: "pointer",
+                      boxShadow: "black",
+
+                    }]}
+                  styles={{
+                    tracks: {
+                      background: `black`,
+                    },
+                    track: {
+                      background: 'transparent',
+                    },
+
+
+
+                  }}
+
                 />
-         
-              </div>
-              <div className="grid w-full max-w-sm items-center gap-2 grid-cols-2">
-                <Label htmlFor="ww">Window Width: {metadata.ww}</Label>
-                <Input type="ww" id="ww" placeholder="Window Width" onKeyDown={(e:React.KeyboardEvent<HTMLInputElement>) =>
-                saveStates("ww", e)}/>
-                <Label htmlFor="wc">Window Center: {metadata.wc}</Label>
-                <Input type="wc" id="wc" placeholder="Window Center" onKeyDown={(e:React.KeyboardEvent<HTMLInputElement>) =>
-                saveStates("wc", e)}/>
-                <Label htmlFor="wc">Current Slice: {metadata.ci}</Label>
-                <Input type="ci" id="ci" placeholder="Current Slice" onKeyDown={(e:React.KeyboardEvent<HTMLInputElement>) =>
-                saveStates("ci", e)}/>
-                <Label htmlFor="zoom">Zoom: {metadata.z}</Label>
-                <Input type="zoom" id="zoom" placeholder="Zoom" onKeyDown={(e:React.KeyboardEvent<HTMLInputElement>) =>
-                saveStates("z", e)}/>
-                <Label htmlFor="panx">Pan X: {metadata.px}</Label>
-                <Input type="panx" id="panx" placeholder="Pan X axis" onKeyDown={(e:React.KeyboardEvent<HTMLInputElement>) =>
-                saveStates("px", e)}/>
-                <Label htmlFor="pany">Pan Y: {metadata.py}</Label>
-                <Input type="pany" id="pany" placeholder="Pan Y axis" onKeyDown={(e:React.KeyboardEvent<HTMLInputElement>) =>
-                saveStates("py", e)}/>
 
               </div>
+              <InputComp setting="ww" label="Window Width" saveStates={saveStates} metadata={metadata}/>
+              <InputComp setting="wc" label="Window Center" saveStates={saveStates} metadata={metadata}/>
+              <InputComp setting="ci" label="Current Slice" saveStates={saveStates} metadata={metadata}/>
+              <InputComp setting="z" label="Zoom" saveStates={saveStates} metadata={metadata}/>
+              <InputComp setting="px" label="Pan Horizontal" saveStates={saveStates} metadata={metadata}/>
+              <InputComp setting="py" label="Pan Vertical" saveStates={saveStates} metadata={metadata}/>
+             
+            
             </div>
+            <div className="flex w-full max-w-sm items-center space-x-2">
+                {/**<Button className="w-1/2" onClick={()={}}><Trash />Discard</Button>*/}
+              <Button className="w-full" onClick={()=>{
+              
+                setValue(metaDataList)
+            
+
+              }}><Save />Save</Button>
+              </div>
           </CardContent>
         </Card>
       </ScrollArea>

@@ -17,7 +17,6 @@ import {
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
 import ImageDrawerComp from "./Components/ImageDrawerComp";
-import DndDrawerComp from "./Components/DndDrawerComp";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Grid from 'dynamic-react-grid'
@@ -42,11 +41,7 @@ function App() {
   const [cols, setCols] = useState<number>(1);
   const [copyClicked, setCopyClicked] = useState<boolean>(false);
   const [url, setURL] = useState<string>("Click Generate URL");
-  useEffect(() => {
-
-    console.log(metaDataList)
-
-  }, [metaDataList]);
+ 
   const addCol = () => {
     if (cols < 3) setCols(cols + 1);
   };
@@ -115,6 +110,20 @@ function App() {
                   }
                 })}
               </div>
+
+              <div className="flex w-full max-w-sm items-center space-x-3">
+                <div className="flex w-full max-w-sm items-center space-x-2">
+                  <Label>Columns</Label>
+                  <Plus onClick={addCol} className="hover:bg-accent" />
+                  <Minus onClick={minusCol} className="hover:bg-accent" />
+                </div>
+                <div className="flex w-full max-w-sm items-center space-x-2">
+                  <Label>Rows</Label>
+                  <Plus onClick={addRow} className="hover:bg-accent" />
+                  <Minus onClick={minusRow} className="hover:bg-accent" />
+                </div>
+              </div>
+
               <div className="flex h-[350px] w-[350px] items-center justify-center rounded-md">
                 {Array.from(Array(cols).keys()).map((c) => (
                   <Grid row className="h-full">
@@ -133,19 +142,6 @@ function App() {
                     )}
                   </Grid>
                 ))}
-              </div>
-
-              <div className="flex w-full max-w-sm items-center space-x-3">
-                <div className="flex w-full max-w-sm items-center space-x-2">
-                  <Label>Columns</Label>
-                  <Plus onClick={addCol} className="hover:bg-accent" />
-                  <Minus onClick={minusCol} className="hover:bg-accent" />
-                </div>
-                <div className="flex w-full max-w-sm items-center space-x-2">
-                  <Label>Rows</Label>
-                  <Plus onClick={addRow} className="hover:bg-accent" />
-                  <Minus onClick={minusRow} className="hover:bg-accent" />
-                </div>
               </div>
 
               <div className="flex w-full max-w-sm items-center space-x-2">

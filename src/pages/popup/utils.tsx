@@ -1,3 +1,4 @@
+
 export interface MetaData {
     thumbnail: string;
     label: string;
@@ -17,7 +18,10 @@ export interface MetaData {
     py: string;
     r: number;
     pad: number;
+    url:string,
+    intLoad:boolean
     cord: number[];
+    
   }
   
   export const initalValues = {
@@ -40,6 +44,9 @@ export interface MetaData {
     r: 0,
     pad: 0,
     cord: [-1, -1],
+    url:"",
+    intLoad:true
+
   };
   
   export function generateURL(data: MetaData) {
@@ -162,3 +169,6 @@ export interface MetaData {
     );
     return variableStringList.map((str) => "dicomweb:" + prefix + str + suffix);
   }
+
+
+

@@ -7,7 +7,17 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "/src/pages/popup/Components/utils"
 
 const labelVariants = cva(
-  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+  {
+    variants: {
+      
+      size: {
+        default: "font-medium",
+        lg: "font-large",
+      },
+    },
+   
+  }
 )
 
 const Label = React.forwardRef<
