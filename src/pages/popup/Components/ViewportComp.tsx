@@ -82,7 +82,7 @@ const ViewportComp: React.VFC<ViewportCompProps> = ({
       stack.map((imageId: string) => {
           cornerstone.imageLoader.loadAndCacheImage(imageId);
         });
-
+       
         await viewport.setStack(
           stack.slice(0, metadata.end_slice),
           metadata.ci - metadata.start_slice

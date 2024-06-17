@@ -1,25 +1,3 @@
-/** 
-import { createRoot } from 'react-dom/client';
-import './style.css' 
-const div = document.createElement('div');
-div.id = '__root';
-document.body.appendChild(div);
-
-const rootContainer = document.querySelector('#__root');
-if (!rootContainer) throw new Error("Can't find Content root element");
-const root = createRoot(rootContainer);
-root.render(
-  <div className='absolute bottom-0 left-0 text-lg text-black bg-amber-400 z-50'  >
-    content script loaded
-  </div>
-);
-
-try {
-  console.log('content script loaded');
-} catch (e) {
-  console.error(e);
-}*/
-
 function injectScript(file_path:string, tag:string) {
   var node = document.getElementsByTagName(tag)[0];
   var script = document.createElement("script");
@@ -28,20 +6,25 @@ function injectScript(file_path:string, tag:string) {
   node.appendChild(script);
 }
 
-let a = injectScript(chrome.runtime.getURL("inject.js"), "body");
+let a = injectScript(chrome.runtime.getURL("src/pages/content/inject.js"), "body");
 
+function f(message:any){
+  console.log(message.data)
+  let metadata = message.data.data.map((x) => ({
+    label: x.label,
+    modality: x.modality,
+    id: x._id,
+    images: x.instances.map((y) => y.url),
+  }));
+  chrome.storage.local.set({ PAC_DATA: generateMetaData(metadata,message.data.url) });
+  if(message.data){
+  window.removeEventListener("message", f, false);
+  }
+}
 window.addEventListener(
   "message",
-  (message) => {
-    let metadata = message.data.data.map((x:any) => ({
-      label: x.label,
-      modality: x.modality,
-      id: x._id,
-      images: x.instances.map((y:any) => y.url),
-    }));
-    chrome.storage.local.set({ PAC_DATA: generateMetaData(metadata,message.data.url) });
-  },
-  { once: true }
+  f,
+  { once: false }
 );
 
 function generateMetaData(list:[any],url:string) {
@@ -57,10 +40,13 @@ function generateMetaData(list:[any],url:string) {
     end_slice: Number(x.images[x.images.length-1].split("/").pop().split(".")[0]),
     max_slice: Number(x.images[x.images.length-1].split("/").pop().split(".")[0]),
     min_slice: Number(x.images[0].split("/").pop().split(".")[0]),
-    //ww: checkUrlQuery(x.id,url,"ww")?checkUrlQuery(x.id,url,"ww"):1400,
-    ww: 1400,
-    //wc: checkUrlQuery(x.id,url,"wc")?checkUrlQuery(x.id,url,"wc"):1200,
-    wc: 1200,
+    ww: checkUrlQuery(x.id,url,"ww")?Number(checkUrlQuery(x.id,url,"ww")):1400,
+    //ww: 1400,
+    //wc: checkUrlQuery(x.id,url,"wc")?Number(checkUrlQuery(x.id,url,"wc"))+1000:1040,
+    wc: checkUrlQuery(x.id,url,"wc")?
+    (x.modality=="CT"?Number(checkUrlQuery(x.id,url,"wc"))+1000:Number(checkUrlQuery(x.id,url,"wc"))):
+    (x.modality=="CT"?1040:40),
+    //wc: 1200,
     ci: Number(x.images[0].split("/").pop().split(".")[0]),
     z: 1,
     px: "0",
@@ -68,6 +54,9 @@ function generateMetaData(list:[any],url:string) {
     r: 0,
     pad: x.images[0].split("/").pop()?.split(".")[0].length || 0,
     cord: [-1, -1],
+    url:url,
+    intLoad:true
+
   }));
   return objs;
 }
