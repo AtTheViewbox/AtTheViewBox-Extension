@@ -1,10 +1,10 @@
 {
   "action": {
-    "default_icon": "public/dev-icon-32.png",
+    "default_icon": "public/icon.png",
     "default_popup": "src/pages/popup/index.html"
   },
   "icons": {
-    "128": "public/dev-icon-128.png"
+    "128":"public/icon.png"
   },
   "web_accessible_resources": [
     {
@@ -12,6 +12,7 @@
         "contentStyle.css",
         "dev-icon-128.png",
         "dev-icon-32.png",
+        "icon.png",
         "src/pages/content/inject.js"
       ],
       "matches": ["https://www.pacsbin.com/*"]

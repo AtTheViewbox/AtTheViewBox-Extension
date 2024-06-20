@@ -1,19 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "Attheviewbox URL Generator",
-  "description": "Generates URL for Attheviewbox",
+  "name": "AtTheViewBox URL Generator",
+  "description": "Generates URL for AtTheViewBox",
 
   "icons": {
     "128": "icon-128.png"
   },
-  "permissions": ["storage",
-  "tabs","nativeMessaging"
+  "permissions": ["storage","nativeMessaging"
 ],
-  "host_permissions":["https://www.pacsbin.com/*"],
+  "host_permissions":["https://www.pacsbin.com/c/*"],
   "content_scripts": [
     {
       "matches": [
-        "https://www.pacsbin.com/*"
+        "https://www.pacsbin.com/c/*"
       ],
       "js": ["src/pages/content/index.tsx"]
     }

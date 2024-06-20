@@ -41,6 +41,7 @@ const ImageDrawerComp: React.VFC<ImageDrawerCompProps> = ({
   const [metadata, setMetadata] = useState<MetaData>(initalValues);
   const [stateFlag, setStateFlag] = useState(false);
   const { metaDataList, setMetaDataList, setValue } = useContext(MetaDataListContext);
+  const [disabled,setDisabled]= useState(false);
 
 
   const handleRangeChange = (value: any) => {
@@ -147,7 +148,7 @@ const ImageDrawerComp: React.VFC<ImageDrawerCompProps> = ({
         <Card className="w-[400px] mt-4">
 
           <CardContent className="grid gap-4">
-          <CardDescription>Adjust values the scan will initially load with.</CardDescription>
+          <CardDescription>Adjust the values the scan will initially load with.</CardDescription>
 
             <div className="grid gap-y-3">
               <div className="grid w-full max-w-sm items-center gap-2 ">
@@ -204,9 +205,13 @@ const ImageDrawerComp: React.VFC<ImageDrawerCompProps> = ({
             </div>
             <div className="flex w-full max-w-sm items-center space-x-2">
                 {/**<Button className="w-1/2" onClick={()={}}><Trash />Discard</Button>*/}
-              <Button className="w-full" onClick={()=>{
+              <Button className="w-full" disabled ={disabled} onClick={()=>{
               
                 setValue(metaDataList)
+                setDisabled(true)
+                setTimeout(function() {
+                  setDisabled(false)
+                }, 1000);
             
 
               }}><Save />Save</Button>
