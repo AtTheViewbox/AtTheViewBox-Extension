@@ -4,7 +4,7 @@
   "description": "Generates URL for AtTheViewBox",
 
   "icons": {
-    "128": "icon-128.png"
+    "128": "icon.png"
   },
   "permissions": ["storage","nativeMessaging"
 ],
