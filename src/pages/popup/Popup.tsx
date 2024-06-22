@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { MetaDataListContext } from "./DataContenxt";
 import { Button } from "./Components/ui/button"
 import { MetaData } from "./utils";
-import { X, Plus, Minus, Copy, CopyCheck } from "lucide-react";
+import { X, Plus, Minus, Copy, Check } from "lucide-react";
 import { Input } from "./Components/ui/input";
 import { Label } from "./Components/ui/label";
 import {
@@ -157,7 +157,7 @@ function App() {
                       }>
                         {copyClicked ?
 
-                          <CopyCheck className="h-4 w-4" />
+                          <Check className="h-4 w-4" />
                           :
                           <Copy className="h-4 w-4" />}
 
