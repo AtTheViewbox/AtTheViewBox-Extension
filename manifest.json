@@ -9,6 +9,10 @@
   "permissions": ["storage"
 ],
   "host_permissions":["https://www.pacsbin.com/c/*"],
+  "action": {
+    "default_icon": "public/icon.png",
+    "default_popup": "src/pages/popup/index.html"
+  },
   "content_scripts": [
     {
       "matches": [
