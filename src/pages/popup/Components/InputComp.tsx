@@ -37,7 +37,6 @@ const InputComp: React.VFC<InputCompProps> = ({
 
     const saveStates = () => {
         setStateFlag(true);
-        console.log(tempData)
         setMetaDataList(
             [...metaDataList].map((object) => {
                 if (object.id === metadata.id) {

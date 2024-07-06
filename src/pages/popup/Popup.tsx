@@ -2,15 +2,13 @@
 import { useContext, useEffect, useState } from "react";
 import { MetaDataListContext } from "./DataContenxt";
 import { Button } from "./Components/ui/button"
-import { MetaData } from "./utils";
-import { X, Plus, Minus, Copy, Check } from "lucide-react";
+import { Plus, Minus, Copy, Check } from "lucide-react";
 import { Input } from "./Components/ui/input";
 import { Label } from "./Components/ui/label";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "./Components/ui/card"
@@ -31,6 +29,7 @@ import DragComp from "./Components/DragComp";
 import DropComp from "./Components/DropComp";
 import { generateGridURL } from "./utils";
 import { Switch } from "./Components/ui/switch"
+import { Skeleton } from "./Components/ui/skeleton";
 
 
 function App() {
@@ -93,6 +92,8 @@ function App() {
                 {metaDataList.map((data) => {
                   if (data.cord[0] == -1 && data.cord[1] == -1) {
                     return (
+                      data.intLoad?
+                      <Skeleton className="h-[100px] w-[100px] rounded-xl" />:
                       <DragComp
                         metadata={data}
                         metaDataList={metaDataList}

@@ -105,16 +105,24 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
         var rescaleIntercept = Number(
           dataSet.string("x00281052")?.split("\\")[0]
         );
-   
+
         const newMetaData = newMetaDataList.find(
           object => object.id == metadata.id && metadata.intLoad
         );
         if (newMetaData){
-        newMetaData.rescaleIntercept=rescaleIntercept
+        newMetaData.rescaleIntercept=rescaleIntercept?rescaleIntercept:0
         //newMetaData.wc =checkUrlQuery(newMetaData, "wc")? newMetaData.wc: metadata.modality == "CT" ? windowCenter + 1000 : windowCenter
-        newMetaData.wc =checkUrlQuery(newMetaData, "wc")? checkUrlQuery(newMetaData, "wc")-rescaleIntercept: windowCenter-rescaleIntercept
+        newMetaData.wc =checkUrlQuery(newMetaData, "wc")? checkUrlQuery(newMetaData, "wc")- newMetaData.rescaleIntercept: windowCenter- newMetaData.rescaleIntercept
+        if (!newMetaData.wc){
+          newMetaData.wc =40
+        }
         newMetaData.ww =checkUrlQuery(newMetaData, "ww")? checkUrlQuery(newMetaData, "ww"): windowWidth
+        if (!newMetaData.ww){
+          newMetaData.ww =400
+        }
         newMetaData.intLoad = false
+
+
         } 
        
       }
