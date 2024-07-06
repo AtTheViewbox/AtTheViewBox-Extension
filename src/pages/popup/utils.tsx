@@ -21,6 +21,8 @@ export interface MetaData {
     url:string,
     intLoad:boolean
     cord: number[];
+    rescaleIntercept:number
+    step:number
     
   }
   
@@ -45,7 +47,9 @@ export interface MetaData {
     pad: 0,
     cord: [-1, -1],
     url:"",
-    intLoad:true
+    intLoad:true,
+    rescaleIntercept:0,
+    step:1
 
   };
   
@@ -138,14 +142,16 @@ export interface MetaData {
     return URL_genereated.href;
   }
   
-  function recreateVariableStringList(start_str: string, end_str: string) {
+  function recreateVariableStringList(start_str: string, end_str: string,step:number) {
     const start = parseInt(start_str, 10);
     const end = parseInt(end_str, 10);
     const length = start_str.length;
   
     // Generate the list programmatically
     const generatedList = [];
-    for (let i = start; i <= end; i++) {
+
+    for (let i = start; i <= end; i+=step) {
+
       let numStr = i.toString();
       while (numStr.length < length) {
         numStr = "0" + numStr;
@@ -161,11 +167,13 @@ export interface MetaData {
     suffix: string,
     start_str: number,
     end_str: number,
-    pad: number
+    pad: number,
+    step: number
   ) {
     const variableStringList = recreateVariableStringList(
       String(start_str).padStart(pad, "0"),
-      String(end_str).padStart(pad, "0")
+      String(end_str).padStart(pad, "0"),
+      step
     );
     return variableStringList.map((str) => "dicomweb:" + prefix + str + suffix);
   }

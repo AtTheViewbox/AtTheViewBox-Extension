@@ -26,7 +26,7 @@ export const MetaDataListContext = createContext<MetaDataListContextProp>({
   setMetaDataList: () => { },
   setValue: () => { },
 });
-const delaytime = 2000;
+
 export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
   const [metaDataList, setMetaDataList] = useState<MetaData[]>([]);
   const [renderingEngine, SetRenderingEngine] =
@@ -34,7 +34,6 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
   const [value, setValue, isPersistent, error, isInitialStateResolved] =
     useChromeStorageLocal("PAC_DATA", []);
   const [isLoaded, setisLoaded] = useState(false);
-  const [delay, setDelay] = useState(true);
 
   useEffect(() => {
 
@@ -67,6 +66,7 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
 
     setupCornerstone();
   }, []);
+
   useEffect(() => {
     setMetaDataList(value);
   }, [value]);
@@ -80,13 +80,13 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
     return 0;
   }
 
-//TODO: be able to get default value
+
   useEffect(() => {
-    
-    /** 
+
     const makerequest = async (metaDataList: MetaData[]) => {
-      
+      const newMetaDataList = [...metaDataList]
       for (let metadata of metaDataList) {
+        
         var url =
           metadata.prefix +
           String(metadata.start_slice).padStart(metadata.pad, "0") +
@@ -101,36 +101,33 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
         var windowWidth = Number(
           dataSet.string("x00281051")?.split("\\")[0]
         );
-        var mode = dataSet.string("x00080060")?.split("\\")[0]
-          ;
-     
-        flushSync(()=>{
-          setMetaDataList(
-            metaDataList.map((object) => {
-              if (object.id == metadata.id && metadata.intLoad) {
-                return {
-                  ...metadata,
-                  wc: checkUrlQuery(object, "wc")
-                  ? checkUrlQuery(object, "wc")
-                  : windowCenter,
-                  ww: checkUrlQuery(object, "ww")
-                  ? checkUrlQuery(object, "ww")
-                  : windowWidth,
-                  intLoad: false,
-                };
-              } else return object;
-            })
-          )
-        })
+
+        var rescaleIntercept = Number(
+          dataSet.string("x00281052")?.split("\\")[0]
+        );
+   
+        const newMetaData = newMetaDataList.find(
+          object => object.id == metadata.id && metadata.intLoad
+        );
+        if (newMetaData){
+        newMetaData.rescaleIntercept=rescaleIntercept
+        //newMetaData.wc =checkUrlQuery(newMetaData, "wc")? newMetaData.wc: metadata.modality == "CT" ? windowCenter + 1000 : windowCenter
+        newMetaData.wc =checkUrlQuery(newMetaData, "wc")? checkUrlQuery(newMetaData, "wc")-rescaleIntercept: windowCenter-rescaleIntercept
+        newMetaData.ww =checkUrlQuery(newMetaData, "ww")? checkUrlQuery(newMetaData, "ww"): windowWidth
+        newMetaData.intLoad = false
+        } 
+       
       }
+    
+      setMetaDataList(newMetaDataList)
     }
     if (metaDataList.length != 0 && !isLoaded) {
       setisLoaded(true);
      makerequest(metaDataList)
 
       }
-    console.log(metaDataList)*/
   }, [metaDataList]);
+
   return (
     <RenderEngineContext.Provider value={renderingEngine}>
 

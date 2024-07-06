@@ -11,21 +11,17 @@ interface DropCompProps {
   setMetaDataList: React.Dispatch<React.SetStateAction<MetaData[]>>;
   setMetaDataSelected: React.Dispatch<React.SetStateAction<number>>;
   setDrawerState: React.Dispatch<React.SetStateAction<boolean>>;
+  imageToggle:boolean
 }
 
-const colSize: Record<number, number> = {
-  1: 12,
-  2: 6,
-  3: 4,
-  4: 3,
-};
 const DropComp: React.VFC<DropCompProps> = ({
   metaDataList,
   r,
   c,
   setMetaDataList,
   setMetaDataSelected,
-  setDrawerState
+  setDrawerState,
+  imageToggle
 }) => {
   const [{ isOver }, drop] = useDrop({
     accept: "card",
@@ -37,8 +33,6 @@ const DropComp: React.VFC<DropCompProps> = ({
     }),
   });
 
-  //var colIndex = value % cols;
-  //var rowIndex = Math.floor(value / cols);
   const addDataToBoard = (item: MetaData) => {
     if (
       metaDataList.some((a) => a.cord[0] == c && a.cord[1] == r)
@@ -70,6 +64,7 @@ const DropComp: React.VFC<DropCompProps> = ({
               setMetaDataList={setMetaDataList}
               setMetaDataSelected={setMetaDataSelected}
               setDrawerState={setDrawerState}
+              imageToggle = {imageToggle}
             />
           );
         }

@@ -30,13 +30,14 @@ import {
 import DragComp from "./Components/DragComp";
 import DropComp from "./Components/DropComp";
 import { generateGridURL } from "./utils";
+import { Switch } from "./Components/ui/switch"
 
 
 function App() {
   const { metaDataList, setMetaDataList } = useContext(MetaDataListContext);
   const [metaDataSelected, setMetaDataSelected] = useState(0);
   const [drawerState, setDrawerState] = useState(false);
-  const [dndDrawerState, setDndDrawerState] = useState(false);
+  const [imageToggle, setImageToggle] = useState(false);
   const [rows, setRows] = useState<number>(1);
   const [cols, setCols] = useState<number>(1);
   const [copyClicked, setCopyClicked] = useState<boolean>(false);
@@ -60,16 +61,9 @@ function App() {
     setCopyClicked(false)
 
 
-  }, [metaDataList]);
+  }, [metaDataList,imageToggle]);
 
-  const toggleDrawer = (metadata: MetaData) => {
-    setMetaDataSelected(metadata.id);
-    setDrawerState(true);
-  };
 
-  const handleClickDndDrawer = () => {
-    setDndDrawerState(true);
-  };
   return (
     <>
       <DndProvider backend={HTML5Backend}>
@@ -105,12 +99,18 @@ function App() {
                         setMetaDataList={setMetaDataList}
                         setMetaDataSelected={setMetaDataSelected}
                         setDrawerState={setDrawerState}
+                        imageToggle = {imageToggle}
                       />
                     );
                   }
                 })}
               </div>
 
+              <div className="flex w-full max-w-sm items-center space-x-2">
+                  <Label>Image Toggle</Label>
+                  <Switch id="toggle" checked={imageToggle}
+                      onCheckedChange={()=>setImageToggle(!imageToggle)}/>
+                </div>
               <div className="flex w-full max-w-sm items-center space-x-3">
                 <div className="flex w-full max-w-sm items-center space-x-2">
                   <Label>Columns</Label>
@@ -122,6 +122,7 @@ function App() {
                   <Plus onClick={addRow} className="hover:bg-accent" />
                   <Minus onClick={minusRow} className="hover:bg-accent" />
                 </div>
+                
               </div>
 
               <div className="flex h-[350px] w-[350px] items-center justify-center rounded-md">
@@ -136,6 +137,7 @@ function App() {
                           setMetaDataList={setMetaDataList}
                           setMetaDataSelected={setMetaDataSelected}
                           setDrawerState={setDrawerState}
+                          imageToggle = {imageToggle}
 
                         /></Grid>
                     )

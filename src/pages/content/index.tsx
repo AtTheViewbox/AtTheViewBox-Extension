@@ -9,7 +9,7 @@ function injectScript(file_path:string, tag:string) {
 let a = injectScript(chrome.runtime.getURL("src/pages/content/inject.js"), "body");
 
 function f(message:any){
-  console.log(message.data)
+
   let metadata = message.data.data.map((x) => ({
     label: x.label,
     modality: x.modality,
@@ -28,26 +28,25 @@ window.addEventListener(
 );
 
 function generateMetaData(list:[any],url:string) {
-  
-  var objs = list.map((x) => ({
+
+  var objs = list.map((x) => (
+    {
     thumbnail: x.images[0],
     label: x.label,
     modality: x.modality,
     id: x.id,
     prefix: longestCommonPrefix(x.images),
     suffix: longestCommonSuffix(x.images),
-    start_slice: Number(x.images[0].split("/").pop().split(".")[0]),
-    end_slice: Number(x.images[x.images.length-1].split("/").pop().split(".")[0]),
-    max_slice: Number(x.images[x.images.length-1].split("/").pop().split(".")[0]),
-    min_slice: Number(x.images[0].split("/").pop().split(".")[0]),
+    start_slice: minSlice(x.images),
+    end_slice: maxSlice(x.images),
+    max_slice: maxSlice(x.images),
+    min_slice:  minSlice(x.images),
     ww: checkUrlQuery(x.id,url,"ww")?Number(checkUrlQuery(x.id,url,"ww")):1400,
     //ww: 1400,
-    //wc: checkUrlQuery(x.id,url,"wc")?Number(checkUrlQuery(x.id,url,"wc"))+1000:1040,
-    wc: checkUrlQuery(x.id,url,"wc")?
-    (x.modality=="CT"?Number(checkUrlQuery(x.id,url,"wc"))+1000:Number(checkUrlQuery(x.id,url,"wc"))):
-    (x.modality=="CT"?1040:40),
-    //wc: 1200,
-    ci: Number(x.images[0].split("/").pop().split(".")[0]),
+    //wc: checkUrlQuery(x.id,url,"wc")?Number(checkUrlQuery(x.id,url,"wc")):1040,
+    wc: checkUrlQuery(x.id,url,"wc")?Number(checkUrlQuery(x.id,url,"wc")):40,
+    ////wc: 1200,
+    ci: minSlice(x.images),
     z: 1,
     px: "0",
     py: "0",
@@ -55,7 +54,9 @@ function generateMetaData(list:[any],url:string) {
     pad: x.images[0].split("/").pop()?.split(".")[0].length || 0,
     cord: [-1, -1],
     url:url,
-    intLoad:true
+    intLoad:true,
+    recaleIntercept:0,
+    step:getStep(x.images)
 
   }));
   return objs;
@@ -72,6 +73,10 @@ function checkUrlQuery(id:string,url:string, search:string){
 }
 function longestCommonPrefix(strs:string[]) {
   if (strs.length === 0) return "";
+
+  if (strs.length==1){
+    return strs[0].split("/").slice(0,strs[0].split("/").length-1).join("/") + "/"
+  }
 
   strs.sort();
 
@@ -90,7 +95,46 @@ function longestCommonPrefix(strs:string[]) {
   return prefix;
 }
 function longestCommonSuffix(strs:string[]) {
+  if (strs.length==1){
+ 
+    return "."+strs[0].split("/")[strs[0].split("/").length-1].split(".").slice(1).join(".")
+  }
   const reversedStrs = strs.map((str:string) => str.split("").reverse().join(""));
   const suffix = longestCommonPrefix(reversedStrs);
   return suffix.split("").reverse().join("");
 }
+
+function maxSlice(strs:string[]) {
+  var m = 0
+  for (const x of strs) {
+    m = Math.max(m,Number(x?.split("/")?.pop()?.split(".")[0]))
+  }
+ return m
+}
+function getStep(strs:string[]) {
+  var slices=[]
+ 
+  for (let i = 0; i < strs.length; i++) {
+    slices.push(Number(strs[i]?.split("/")?.pop()?.split(".")[0]))
+  }
+  slices.sort(function(a, b) {return a - b;})
+  var steps=[]
+  for (let i = 1; i < slices.length; i++) {
+    steps.push(slices[i]-slices[i-1])
+  }
+  var set = new Set(steps);
+  if (set.size==1){
+    return steps[0]
+  }
+ return 1
+}
+
+function minSlice(strs:string[]) {
+  var m = Number.POSITIVE_INFINITY
+  for (const x of strs) {
+    m = Math.min(m,Number(x?.split("/")?.pop()?.split(".")[0]))
+  }
+ return m
+  
+}
+

@@ -25,7 +25,8 @@ const ViewportComp: React.VFC<ViewportCompProps> = ({
     metadata.suffix,
     metadata.start_slice,
     metadata.end_slice,
-    metadata.pad
+    metadata.pad,
+    metadata.step
   );
   const viewportId = `${String(metadata.id)}-vp`;
   const elementRef = useRef<HTMLDivElement>(null);
@@ -93,7 +94,7 @@ const ViewportComp: React.VFC<ViewportCompProps> = ({
        viewport.setProperties({
         voiRange: cornerstone.utilities.windowLevel.toLowHighRange(metadata.ww, metadata.wc),
   
-        isComputedVOI: false,
+        isComputedVOI: true,
       });
 
         viewport.render();
@@ -170,13 +171,14 @@ const ViewportComp: React.VFC<ViewportCompProps> = ({
               metadata.wc
             ),
            
-            isComputedVOI: false,
+            isComputedVOI: true,
           });
           viewport.render();
           setStateFlag(false);
         }
       }
     };
+
     update();
   }, [metaDataList]);
 
