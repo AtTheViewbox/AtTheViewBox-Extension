@@ -16,6 +16,7 @@ function f(message:any){
     id: x._id,
     images: x.instances.map((y) => y.url),
   }));
+  
   chrome.storage.local.set({ PAC_DATA: generateMetaData(metadata,message.data.url) });
   if(message.data){
   window.removeEventListener("message", f, false);
@@ -37,8 +38,9 @@ function generateMetaData(list:[any],url:string) {
     id: x.id,
     prefix: longestCommonPrefix(x.images),
     suffix: longestCommonSuffix(x.images),
-    start_slice: minSlice(x.images),
-    end_slice: maxSlice(x.images),
+    start_slice: 0,
+    end_slice: x.images.length,
+    //end_slice: x.images.length,
     max_slice: maxSlice(x.images),
     min_slice:  minSlice(x.images),
     ww: checkUrlQuery(x.id,url,"ww")?Number(checkUrlQuery(x.id,url,"ww")):1400,
@@ -46,7 +48,8 @@ function generateMetaData(list:[any],url:string) {
     //wc: checkUrlQuery(x.id,url,"wc")?Number(checkUrlQuery(x.id,url,"wc")):1040,
     wc: checkUrlQuery(x.id,url,"wc")?Number(checkUrlQuery(x.id,url,"wc")):40,
     ////wc: 1200,
-    ci: minSlice(x.images),
+    //ci: minSlice(x.images),
+    ci: 0,
     z: 1,
     px: "0",
     py: "0",
@@ -55,7 +58,8 @@ function generateMetaData(list:[any],url:string) {
     cord: [-1, -1],
     url:url,
     intLoad:true,
-    recaleIntercept:0,
+    rescaleIntercept:0,
+    rescaleSlope:1,
     step:getStep(x.images)
 
   }));

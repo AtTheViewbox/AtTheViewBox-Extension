@@ -1,11 +1,12 @@
 import { MetaData } from "../utils";
-import { useState, useEffect, useContext, useMemo } from "react";
+import { useState, useEffect, useContext } from "react";
 import * as React from "react";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { SendHorizontal, Trash, Save, Pencil, RotateCcw } from "lucide-react";
+import { Save, Pencil, RotateCcw } from "lucide-react";
 import { MetaDataListContext } from "../DataContenxt";
+import { getReveredAdjustedWC,getReveredAdjustedWW,getAdjustedWC,getAdjustedWW} from "../utils";
 
 
 interface InputCompProps {
@@ -23,14 +24,21 @@ const InputComp: React.VFC<InputCompProps> = ({
 }) => {
     const { metaDataList, setMetaDataList, setValue } = useContext(MetaDataListContext);
     const [tempData, setTempData] = useState(
-        setting == "wc" ? metadata.wc + metadata.rescaleIntercept : metadata[setting]
+        setting == "wc" ? 
+        getReveredAdjustedWC(metadata) : 
+        setting == "ww"?
+        getReveredAdjustedWW(metadata):
+        metadata[setting]
     );
 
     const [edited, setEdited] = useState(true);
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        setTempData(setting == "wc" ? metadata.wc + metadata.rescaleIntercept :
+        setTempData(setting == "wc" ? 
+            getReveredAdjustedWC(metadata) : 
+            setting == "ww"?
+            getReveredAdjustedWW(metadata):
             metadata[setting])
         //setTempData(metadata[setting])
     }, [metadata]);
@@ -43,12 +51,16 @@ const InputComp: React.VFC<InputCompProps> = ({
                     if (setting === "wc") {
                         return {
                             ...object,
-                            [setting]: Number(tempData) - object.rescaleIntercept
-                            //object.modality == "CT" ? (Number(event.target.value) + 1000) : Number(event.target.value),
+                            [setting]:getAdjustedWC(Number(tempData),metadata)
                         }
-
                     }
-                    if (setting === "ci") {
+                    else if(setting === "ww") {
+                        return {
+                            ...object,
+                            [setting]:getAdjustedWW(Number(tempData),metadata)
+                        }
+                    }
+                    else if (setting === "ci") {
 
                         if (Number(tempData) > object.end_slice) {
                             return {
@@ -93,8 +105,9 @@ const InputComp: React.VFC<InputCompProps> = ({
                             if (!isNaN(Number(e.target.value))) {
                                 saveStates()
                                 e.target.blur()
+                                setEdited(true)
                             }else setError(true)
-                            setEdited(true)
+                            
                         }
                     }}
                 />
@@ -116,8 +129,13 @@ const InputComp: React.VFC<InputCompProps> = ({
                 <Button className="w-full"
                     disabled={edited}
                     onClick={() => {
-                        setTempData(setting == "wc" ? metadata.wc + metadata.rescaleIntercept : metadata[setting])
+                        setTempData(setting == "wc" ? 
+                            getReveredAdjustedWC(metadata) : 
+                            setting == "ww"?
+                            getReveredAdjustedWW(metadata):
+                            metadata[setting])
                         setEdited(false)
+                        setError(false)
                     }}>
                     <RotateCcw />
                 </Button>

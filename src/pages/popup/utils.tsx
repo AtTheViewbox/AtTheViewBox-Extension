@@ -6,23 +6,24 @@ export interface MetaData {
     modality: string;
     prefix: string;
     suffix: string;
-    start_slice: number;
-    end_slice: number;
-    max_slice: number;
-    min_slice:number;
+    start_slice: number; //index of slice that volume starts on
+    end_slice: number; //index of the slice that volume ends on
+    max_slice: number; //the highest value a slice is labeled
+    min_slice:number; //the lowest value a slice is labeled
     ww: number;
     wc: number;
-    ci: number;
+    ci: number; //index of current slice within the range start_slice and end_slice
     z: number;
     px: string;
     py: string;
     r: number;
-    pad: number;
+    pad: number; //number 0 to pad start_slice and end_slice
     url:string,
     intLoad:boolean
     cord: number[];
     rescaleIntercept:number
-    step:number
+    rescaleSlope:number
+    step:number //value that each dicom slice is stepped by
     
   }
   
@@ -49,6 +50,7 @@ export interface MetaData {
     url:"",
     intLoad:true,
     rescaleIntercept:0,
+    rescaleSlope:1,
     step:1
 
   };
@@ -178,5 +180,48 @@ export interface MetaData {
     return variableStringList.map((str) => "dicomweb:" + prefix + str + suffix);
   }
 
+  export function checkUrlQuery(object: MetaData, search: string) {
+    const urlParams = new URLSearchParams(object.url.split("?")[1]);
+
+    if (urlParams.get("s") == String(object.id) && urlParams.has(search)) {
+      return Number(urlParams.get(search));
+    }
+    return 0;
+  }
 
 
+  export function getAdjustedWC(
+    wc:number,
+    metadata:MetaData
+  ) {
+    if (!wc){
+          return 40
+       }
+    return (wc-metadata.rescaleIntercept)/(metadata.rescaleSlope)
+  }
+  
+  export function getAdjustedWW(
+    ww:number,
+    metadata:MetaData
+  ) {
+    if (!ww){
+          return 400
+       }
+    return (ww)/(metadata.rescaleSlope)
+  }
+
+
+  export function getReveredAdjustedWW(
+
+    metadata:MetaData
+  ) {
+
+    return (metadata.ww)*(metadata.rescaleSlope)
+  }
+
+  export function getReveredAdjustedWC(
+    metadata:MetaData
+  ) {
+
+    return (metadata.wc*metadata.rescaleSlope+metadata.rescaleIntercept)
+  }

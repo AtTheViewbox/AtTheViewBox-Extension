@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MetaDataListContext } from "../DataContenxt";
 import { MetaData, initalValues } from "../utils";
 import { useContext } from "react";
-import { X, Trash, Save } from 'lucide-react';
+import { X} from 'lucide-react';
 import { Button } from "./ui/button";
 import ViewportComp from "./ViewportComp";
 import {
@@ -40,14 +40,12 @@ const ImageDrawerComp: React.VFC<ImageDrawerCompProps> = ({
     }
     setStateFlag(true)
 
-
     setMetaDataList([...metaDataList].map(object => {
       if (object.id === metadata.id) {
         return {
           ...object,
           start_slice: value[0],
           end_slice: value[2],
-          //ci: (metadata.ci<value[0])?value[0]:(metadata.ci>value[2])?value[2]:metadata.ci
           ci: value[1]
         }
       }
@@ -57,7 +55,9 @@ const ImageDrawerComp: React.VFC<ImageDrawerCompProps> = ({
 
 
   useEffect(() => {
+
     setMetadata(metaDataList.find((x) => x.id === metadataId) || initalValues);
+    console.log(metadata)
   }, [metaDataList, metadataId]);
 
   const handleClose = () => {
@@ -92,8 +92,8 @@ const ImageDrawerComp: React.VFC<ImageDrawerCompProps> = ({
               <div className="grid w-full max-w-sm items-center gap-2 ">
                 <Label htmlFor="email">Slice Range</Label>
                 <TooltipSliderComp range
-                  min={metadata.min_slice}
-                  max={metadata.max_slice/metadata.step}
+                  min={0}
+                  max={Number((metadata.max_slice-metadata.min_slice)/metadata.step)}
                   value={[metadata.start_slice, metadata.ci, metadata.end_slice]}
                   tipFormatter={(value) => `${value}`}
                   onChange={handleRangeChange}

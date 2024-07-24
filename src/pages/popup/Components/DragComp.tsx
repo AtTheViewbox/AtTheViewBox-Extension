@@ -2,7 +2,6 @@ import { MetaData } from "../utils";
 import * as React from "react";
 import { useContext } from "react";
 import { useDrag } from "react-dnd";
-import { Button } from "./ui/button";
 import { X, Pencil, GripVertical } from "lucide-react";
 import { RenderEngineContext } from "../DataContenxt";
 import ThumbnailViewportComp from "./ThumbnailViewportComp";

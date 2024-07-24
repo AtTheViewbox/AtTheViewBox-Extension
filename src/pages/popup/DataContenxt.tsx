@@ -7,9 +7,8 @@ import { useChromeStorageLocal } from "use-chrome-storage";
 //@ts-ignore
 import cornerstoneDICOMImageLoader from "@cornerstonejs/dicom-image-loader";
 import dicomParser from "dicom-parser";
-import { MetaData } from "./utils";
+import { MetaData,checkUrlQuery,getAdjustedWC,getAdjustedWW } from "./utils";
 import { parseDicom } from "dicom-parser";
-import { flushSync } from "react-dom";
 
 //export const DataContext = createContext();
 interface MetaDataListContextProp {
@@ -71,16 +70,6 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
     setMetaDataList(value);
   }, [value]);
 
-  function checkUrlQuery(object: MetaData, search: string) {
-    const urlParams = new URLSearchParams(object.url.split("?")[1]);
-
-    if (urlParams.get("s") == String(object.id) && urlParams.has(search)) {
-      return Number(urlParams.get(search));
-    }
-    return 0;
-  }
-
-
   useEffect(() => {
 
     const makerequest = async (metaDataList: MetaData[]) => {
@@ -91,7 +80,7 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
           metadata.prefix +
           String(metadata.start_slice).padStart(metadata.pad, "0") +
           metadata.suffix;
-        const response = await fetch(url);
+        const response = await fetch(metadata.thumbnail);
         const buffer = await response.arrayBuffer();
         var byteArray = new Uint8Array(buffer);
         var dataSet = parseDicom(byteArray);
@@ -111,15 +100,15 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
         );
         if (newMetaData){
         newMetaData.rescaleIntercept=rescaleIntercept?rescaleIntercept:0
-        //newMetaData.wc =checkUrlQuery(newMetaData, "wc")? newMetaData.wc: metadata.modality == "CT" ? windowCenter + 1000 : windowCenter
-        newMetaData.wc =checkUrlQuery(newMetaData, "wc")? checkUrlQuery(newMetaData, "wc")- newMetaData.rescaleIntercept: windowCenter- newMetaData.rescaleIntercept
-        if (!newMetaData.wc){
-          newMetaData.wc =40
-        }
-        newMetaData.ww =checkUrlQuery(newMetaData, "ww")? checkUrlQuery(newMetaData, "ww"): windowWidth
-        if (!newMetaData.ww){
-          newMetaData.ww =400
-        }
+        var rescaleSlope = Number(
+          dataSet.string("x00281053")?.split("\\")[0]
+        );
+        newMetaData.rescaleSlope = rescaleSlope?rescaleSlope:1
+        
+        newMetaData.wc =checkUrlQuery(newMetaData, "wc")? getAdjustedWC(checkUrlQuery(newMetaData, "wc"),newMetaData):getAdjustedWC(windowCenter,newMetaData)
+        
+        newMetaData.ww =checkUrlQuery(newMetaData, "ww")? getAdjustedWW(checkUrlQuery(newMetaData, "ww"),newMetaData):getAdjustedWW(windowWidth,newMetaData)
+   
         newMetaData.intLoad = false
 
 

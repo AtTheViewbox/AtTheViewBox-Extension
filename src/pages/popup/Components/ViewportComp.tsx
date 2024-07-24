@@ -23,8 +23,8 @@ const ViewportComp: React.VFC<ViewportCompProps> = ({
   const stack = recreateUriStringList(
     metadata.prefix,
     metadata.suffix,
-    metadata.start_slice,
-    metadata.end_slice,
+    metadata.min_slice,
+    metadata.max_slice,
     metadata.pad,
     metadata.step
   );
@@ -83,10 +83,10 @@ const ViewportComp: React.VFC<ViewportCompProps> = ({
       stack.map((imageId: string) => {
           cornerstone.imageLoader.loadAndCacheImage(imageId);
         });
-       
+        
         await viewport.setStack(
-          stack.slice(0, metadata.end_slice),
-          metadata.ci - metadata.start_slice
+          stack.slice(metadata.start_slice, metadata.end_slice+1),
+          metadata.ci-metadata.start_slice
         );
         viewport.setZoom(metadata.z);
         viewport.setPan([Number(metadata.px), Number(metadata.py)]);
@@ -156,8 +156,8 @@ const ViewportComp: React.VFC<ViewportCompProps> = ({
         ) as cornerstone.StackViewport;
         if (viewport && stateFlag) {
           await viewport.setStack(
-            stack.slice(0, metadata.end_slice),
-            metadata.ci - metadata.start_slice
+            stack.slice(metadata.start_slice, metadata.end_slice+1),
+            metadata.ci-metadata.start_slice
           );
           viewport.setZoom(metadata.z);     
 

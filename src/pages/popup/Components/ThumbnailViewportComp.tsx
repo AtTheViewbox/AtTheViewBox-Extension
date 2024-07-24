@@ -1,9 +1,6 @@
-import React, { useRef, useContext, useEffect, useState, useMemo } from "react";
-import { RenderEngineContext } from "../DataContenxt";
+import React, { useRef, useEffect } from "react";
 import * as cornerstone from "@cornerstonejs/core";
-import * as cornerstoneTools from "@cornerstonejs/tools";
-import { MetaData, recreateUriStringList, initalValues } from "../utils";
-import { MetaDataListContext } from "../DataContenxt";
+import { MetaData, recreateUriStringList } from "../utils";
 
 interface ViewportCompProps {
   metadata: MetaData;
@@ -22,8 +19,8 @@ const ThumbnailViewportComp: React.VFC<ViewportCompProps> = ({
   const stack = recreateUriStringList(
     metadata.prefix,
     metadata.suffix,
-    metadata.start_slice,
-    metadata.end_slice,
+    metadata.min_slice,
+    metadata.max_slice,
     metadata.pad,
     metadata.step
   );
