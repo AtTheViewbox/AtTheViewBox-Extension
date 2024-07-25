@@ -104,11 +104,15 @@ export interface MetaData {
         URL_genereated.searchParams.append("vd." + value + ".s.sf", data.suffix);
         URL_genereated.searchParams.append(
           "vd." + value + ".s.s",
-          String(data.start_slice).padStart(data.pad, "0")
+          String((data.start_slice)*data.step+data.min_slice).padStart(data.pad, "0")
         );
         URL_genereated.searchParams.append(
           "vd." + value + ".s.e",
-          String(data.end_slice).padStart(data.pad, "0")
+          String(data.end_slice*data.step+data.min_slice).padStart(data.pad, "0")
+        );
+        URL_genereated.searchParams.append(
+          "vd." + value + ".s.D",
+          data.step.toString()
         );
         URL_genereated.searchParams.append(
           "vd." + value + ".ww",

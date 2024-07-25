@@ -59,7 +59,7 @@ function App() {
     setURL(generateGridURL(metaDataList, rows, cols))
     setCopyClicked(false)
 
-
+    console.log(url)
   }, [metaDataList,imageToggle]);
 
 

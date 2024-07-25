@@ -76,10 +76,6 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
       const newMetaDataList = [...metaDataList]
       for (let metadata of metaDataList) {
         
-        var url =
-          metadata.prefix +
-          String(metadata.start_slice).padStart(metadata.pad, "0") +
-          metadata.suffix;
         const response = await fetch(metadata.thumbnail);
         const buffer = await response.arrayBuffer();
         var byteArray = new Uint8Array(buffer);

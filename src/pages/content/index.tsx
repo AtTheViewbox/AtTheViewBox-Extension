@@ -39,16 +39,11 @@ function generateMetaData(list:[any],url:string) {
     prefix: longestCommonPrefix(x.images),
     suffix: longestCommonSuffix(x.images),
     start_slice: 0,
-    end_slice: x.images.length,
-    //end_slice: x.images.length,
+    end_slice: x.images.length-1,
     max_slice: maxSlice(x.images),
     min_slice:  minSlice(x.images),
     ww: checkUrlQuery(x.id,url,"ww")?Number(checkUrlQuery(x.id,url,"ww")):1400,
-    //ww: 1400,
-    //wc: checkUrlQuery(x.id,url,"wc")?Number(checkUrlQuery(x.id,url,"wc")):1040,
     wc: checkUrlQuery(x.id,url,"wc")?Number(checkUrlQuery(x.id,url,"wc")):40,
-    ////wc: 1200,
-    //ci: minSlice(x.images),
     ci: 0,
     z: 1,
     px: "0",
@@ -138,6 +133,7 @@ function minSlice(strs:string[]) {
   for (const x of strs) {
     m = Math.min(m,Number(x?.split("/")?.pop()?.split(".")[0]))
   }
+  console.log(m)
  return m
   
 }
