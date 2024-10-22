@@ -15,7 +15,21 @@
         "icon.png",
         "src/pages/content/inject.js"
       ],
-      "matches": ["https://www.pacsbin.com/*"]
+      "matches": ["https://www.pacsbin.com/*"],
+      "use_dynamic_url": false
+   
     }
-  ]
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.pacsbin.com/*"
+      ],
+      "js": ["src/pages/content/index.tsx"]
+
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; "
+  }
 }
