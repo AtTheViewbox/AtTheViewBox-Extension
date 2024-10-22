@@ -16,12 +16,15 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.pacsbin.com/c/*"
+        "https://www.pacsbin.com/*"
       ],
       "js": ["src/pages/content/index.tsx"]
+   
     }
   ],
-  
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; "
+  },
   "web_accessible_resources": [
     {
       "resources": [
@@ -30,9 +33,11 @@
       "matches": [
         "https://www.pacsbin.com/*"
         
-      ]
+      ],
+      "use_dynamic_url": false
     }
   ],
+  
   "externally_connectable": {
     "ids": ["*"]},
   "version": "1.1"
