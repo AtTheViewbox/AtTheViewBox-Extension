@@ -57,7 +57,7 @@ export interface MetaData {
   
   export function generateURL(data: MetaData) {
     const URL_genereated = new URL(
-      "https://attheviewbox.github.io/TemplateStaticCornerstone3DViewport/"
+      "https://attheviewbox.github.io/audience/"
     );
   
     URL_genereated.searchParams.append("m", "true");
@@ -87,7 +87,7 @@ export interface MetaData {
     col: number
   ) {
     const URL_genereated = new URL(
-      "https://attheviewbox.github.io/TemplateStaticCornerstone3DViewport/"
+      "https://attheviewbox.github.io/audience/"
     );
   
     URL_genereated.searchParams.append("m", "true");
