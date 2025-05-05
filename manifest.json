@@ -40,5 +40,5 @@
   
   "externally_connectable": {
     "ids": ["*"]},
-  "version": "1.1"
+  "version": "1.2"
 }

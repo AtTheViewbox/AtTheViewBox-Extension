@@ -57,7 +57,6 @@ const ImageDrawerComp: React.VFC<ImageDrawerCompProps> = ({
   useEffect(() => {
 
     setMetadata(metaDataList.find((x) => x.id === metadataId) || initalValues);
-    console.log(metadata)
   }, [metaDataList, metadataId]);
 
   const handleClose = () => {

@@ -9,6 +9,7 @@ import cornerstoneDICOMImageLoader from "@cornerstonejs/dicom-image-loader";
 import dicomParser from "dicom-parser";
 import { MetaData,checkUrlQuery,getAdjustedWC,getAdjustedWW } from "./utils";
 import { parseDicom } from "dicom-parser";
+import { createClient } from '@supabase/supabase-js';
 
 //export const DataContext = createContext();
 interface MetaDataListContextProp {
@@ -34,7 +35,17 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
     useChromeStorageLocal("PAC_DATA", []);
   const [isLoaded, setisLoaded] = useState(false);
 
+
+
+  const cl = createClient(
+    "https://gcoomnnwmbehpkmbgroi.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdjb29tbm53bWJlaHBrbWJncm9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUzNDE5NDEsImV4cCI6MjA0MDkxNzk0MX0.S3Supif3vuWlAIz3JlRTeWDx6vMttsP5ynx_XM9Kvyw"
+  );
+
+
+
   useEffect(() => {
+    
 
     const setupCornerstone = async () => {
       cornerstoneDICOMImageLoader.external.cornerstone = cornerstone;
@@ -127,7 +138,7 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
       <MetaDataListContext.Provider value={{
         metaDataList, setMetaDataList,
         // @ts-ignore
-        setValue
+        setValue,cl
       }}>
         {children}
       </MetaDataListContext.Provider>

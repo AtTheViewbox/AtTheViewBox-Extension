@@ -9,7 +9,7 @@ function injectScript(file_path:string, tag:string) {
 let a = injectScript(chrome.runtime.getURL("src/pages/content/inject.js"), "body");
 
 function f(message:any){
-  console.log(message)
+
   let metadata = message.data.data.map((x) => ({
     label: x.label,
     modality: x.modality,
@@ -133,7 +133,6 @@ function minSlice(strs:string[]) {
   for (const x of strs) {
     m = Math.min(m,Number(x?.split("/")?.pop()?.split(".")[0]))
   }
-  console.log(m)
  return m
   
 }

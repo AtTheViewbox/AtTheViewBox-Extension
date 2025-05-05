@@ -81,13 +81,14 @@ export interface MetaData {
     URL_genereated.searchParams.append("vd.1.r", data.r.toString());
     return URL_genereated.href;
   }
+  
   export function generateGridURL(
     metaDataList: MetaData[],
     row: number,
     col: number
   ) {
     const URL_genereated = new URL(
-      "https://attheviewbox.github.io/TemplateStaticCornerstone3DViewport/"
+      "https://attheviewbox.github.io/audience/"
     );
   
     URL_genereated.searchParams.append("m", "true");
