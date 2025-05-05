@@ -26,6 +26,10 @@ export const MetaDataListContext = createContext<MetaDataListContextProp>({
   setMetaDataList: () => { },
   setValue: () => { },
 });
+const cl = createClient(
+  "https://gcoomnnwmbehpkmbgroi.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdjb29tbm53bWJlaHBrbWJncm9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUzNDE5NDEsImV4cCI6MjA0MDkxNzk0MX0.S3Supif3vuWlAIz3JlRTeWDx6vMttsP5ynx_XM9Kvyw"
+);
 
 export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
   const [metaDataList, setMetaDataList] = useState<MetaData[]>([]);
@@ -36,11 +40,6 @@ export const DataProvider = ({ children }: PropsWithChildren<{}>) => {
   const [isLoaded, setisLoaded] = useState(false);
 
 
-
-  const cl = createClient(
-    "https://gcoomnnwmbehpkmbgroi.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdjb29tbm53bWJlaHBrbWJncm9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUzNDE5NDEsImV4cCI6MjA0MDkxNzk0MX0.S3Supif3vuWlAIz3JlRTeWDx6vMttsP5ynx_XM9Kvyw"
-  );
 
 
 

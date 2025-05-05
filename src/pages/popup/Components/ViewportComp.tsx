@@ -22,6 +22,7 @@ const ViewportComp: React.VFC<ViewportCompProps> = ({
   const refValue = useRef(metaDataList);
   const [metadata, setMetadata] = useState<MetaData>(initalValues);
   const [isloading, setIsloading] = useState(true);
+  const [progress, setProgress] = useState(0);
 
   const stack = recreateUriStringList(
     metadata.prefix,
@@ -65,16 +66,35 @@ const ViewportComp: React.VFC<ViewportCompProps> = ({
     }
   };
 
+
+  const pLimit = (limit: number) => {
+    const queue: (() => Promise<void>)[] = [];
+    let active = 0;
+  
+    const next = () => {
+      if (active >= limit || queue.length === 0) return;
+      const fn = queue.shift();
+      if (fn) {
+        active++;
+        fn().finally(() => {
+          active--;
+          next();
+        });
+      }
+    };
+  
+    return async (fn: () => Promise<void>) => {
+      queue.push(fn);
+      next();
+    };
+  };
+
   useEffect(() => {
     const viewportInput = {
       viewportId,
       type: cornerstone.Enums.ViewportType.STACK,
       element: elementRef.current as HTMLInputElement,
       defaultOptions: {},
-    };
-
-    const preloadImages = async (imageIds: string[]) => {
-      return await Promise.all(imageIds.map(id => cornerstone.imageLoader.loadAndCacheImage(id)));
     };
 
     const loadImagesAndDisplay = async () => {
@@ -88,8 +108,16 @@ const ViewportComp: React.VFC<ViewportCompProps> = ({
       viewport.element.addEventListener("mousemove", updateStates);
       viewport.element.addEventListener("wheel", updateStates);
 
-      const imageSliceStack = stack.slice(metadata.start_slice, metadata.end_slice + 1);
-      await preloadImages(imageSliceStack); // Preload all slices before setStack
+      const imageSliceStack = stack.slice(
+        metadata.start_slice,
+        metadata.end_slice + 1
+      );
+      //await preloadImagesThrottled(imageSliceStack); // Preload all slices before setStack
+
+      const limit = pLimit(10);
+      imageSliceStack.forEach((id) => {
+        limit(() => cornerstone.imageLoader.loadAndCacheImage(id));
+      });
 
       await viewport.setStack(
         imageSliceStack,
