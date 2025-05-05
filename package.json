@@ -1,6 +1,6 @@
 {
   "name": "vite-web-extension",
-  "version": "1.2.5",
+  "version": "1.2.7",
   "description": "A simple chrome extension template with Vite, React, TypeScript and Tailwind CSS.",
   "license": "MIT",
   "repository": {
@@ -48,7 +48,7 @@
     "webextension-polyfill": "^0.11.0"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "^2.0.0-beta.23",
+    "@crxjs/vite-plugin": "^2.0.0-beta.26",
     "@types/chrome": "^0.0.268",
     "@types/node": "^20.12.11",
     "@types/react": "^18.3.1",
